@@ -1,24 +1,33 @@
-export const SELECT_PACKAGE = 'SELECT_PACKAGE'
-function selectPackage(time) {
-	return {  type: SELECT_PACKAGE,
+let countdownTime;
+let count;
+let stop = false;
+
+// Async Action control Button: start, stop, reset
+export const COUNTDOWN = 'COUNTDOWN'
+function dispatchTime(time) {
+	return {  type: COUNTDOWN,
 			  time
 		}
 }
 
-let countdownTime;
+export function startPomodoro() {
+	return function (dispatch, getState) {
+		console.log('startPomodoro %s', getState())
 
-export function countdown(value) {
-	console.log('hassssssssssss')
-	return function (dispatch) {
-		console.log('countdown')
-		var count = value;
-		var minutes = Math.floor(count / 60);
-		var seconds = Math.floor(count % 60);
+		//check da stop hay chua
+		if(!stop) {
+			count = getState().packageTime;
+		} else {
+			stop = false
+		}
+
+		let minutes = Math.floor(count / 60);
+		let seconds = Math.floor(count % 60);
 
 		clearInterval(countdownTime);
 
 		countdownTime = setInterval(function(){
-			console.log('set')
+			console.log('count')
 
 			if (count > 59) {
 				if (seconds < 10 && seconds >= 0) {
@@ -28,26 +37,23 @@ export function countdown(value) {
 					minutes--;
 					seconds = count % 60;
 				}
-				// $("#bigtime").html(minutes + ":" + seconds + " remaining!");
 				let time = {
 					minutes: minutes,
 					seconds: seconds
 				}
-				dispatch(selectPackage(time))
+				dispatch(dispatchTime(time))
 				seconds--;
 			}
 
-			if (count < 60 && count >= 0){
+			if (count < 60 && count >= 0) {
 				let time = {
 					minutes: 0,
 					seconds: count
 				}
-				dispatch(selectPackage(time))
-
+				dispatch(dispatchTime(time))
 				if (count === 0) {
-					clearInterval(countdown);
+					clearInterval(countdownTime);
 				}
-
 			} 
 			count--;
 			return;
@@ -55,10 +61,53 @@ export function countdown(value) {
 	}
 }
 
+export function stopPomodoro() {
+	return function(dispatch) {
+		clearInterval(countdownTime)
+		stop = true
+	}
+}
+
+export function resetPomodoro() {
+	return function(dispatch, getState) {
+		clearInterval(countdownTime)
+
+		count = getState().packageTime;
+		let time = {
+			minutes : Math.floor(count / 60),
+			seconds : Math.floor(count % 60)
+		}
+		dispatch(dispatchTime(time))
+	}
+}
+
+export function setInitalPackageTime(value) {
+	return function(dispatch) {
+		clearInterval(countdownTime);
+		if(value > 0) {
+			let time = {
+				minutes : Math.floor(value / 60),
+				seconds : Math.floor(value % 60)
+			}
+			dispatch(dispatchTime(time))
+		}
+	}
+}
 
 
 
-export const btClick = (value) => ({
-  type: 'BUTTON_CLICK',
-  value
-})
+// Async action select package time
+
+export const SELECT_PAGKAGE_TIME = 'SELECT_PAGKAGE_TIME'
+function dispatchPagkageTime(packageTime) {
+	return {  type: SELECT_PAGKAGE_TIME,
+			  value: packageTime
+		}
+}
+
+export function selectPagkageTime(packageTime) {
+	return function(dispatch) {
+		stop = false;
+		dispatch(dispatchPagkageTime(packageTime))
+	}
+}

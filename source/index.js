@@ -21,7 +21,7 @@ const store = createStore(
 
 // const store = createStore(reducer)
 
-// console.log(store.getState())
+console.log(store.getState())
 render(
   <Provider store={store}>
     <App />
