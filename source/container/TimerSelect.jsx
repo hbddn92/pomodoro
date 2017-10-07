@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import { countdown } from '../actions'
+import { selectPagkageTime, setInitalPackageTime } from '../actions'
 
 const style = {
 	margin: 0,
@@ -11,13 +11,15 @@ const style = {
 class TimerSelect extends React.Component{
 	constructor() {
 		super();
-		this.state = ({value : 'a'})
+		this.state = ({value : '1500'})
 
 	}
 
 	handleChange(value) {
-		this.setState({value: value})
-		this.props.dispatch(countdown(parseInt(value)))
+		// this.props.dispatch(countdown(parseInt(value)))
+		this.props.dispatch(selectPagkageTime(parseInt(value)))
+		this.props.dispatch(setInitalPackageTime(parseInt(value)))
+		this.setState({value: value});
 	}
 
 	render() {

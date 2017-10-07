@@ -1,14 +1,10 @@
 import {
-  SELECT_PACKAGE
+  COUNTDOWN
 } from '../actions'
-const times = (state = {}, action) => {
-  console.log('reducerssssssssss  %s', action.value)
+const times = (state = {minutes: '25', seconds: '00'}, action) => {
+  console.log('reducers times  %s', JSON.stringify(action.time))
   switch (action.type) {
-  	case 'BUTTON_CLICK':
-  		return {
-  			seconds: action.value
-  		}
-  	case SELECT_PACKAGE:
+  	case COUNTDOWN:
   		return action.time
     default:
       return state
